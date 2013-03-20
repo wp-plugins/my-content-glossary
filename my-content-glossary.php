@@ -23,7 +23,9 @@ Author URI: http://www.joedolson.com
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-if ( !function_exists('mcm_show_posts') ) {
+
+require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+if ( !is_plugin_active('my-content-management/my-content-management.php') ) {
 	$activate = admin_url('plugins.php#my-content-management');
 	add_action('admin_notices', create_function( '', "echo \"<div class='error'><p>My Content Management must be activated to use MCM Glossary Filter. <a href='$activate'>Visit your plugins page to activate</a>.</p></div>\";" ) );
 }
