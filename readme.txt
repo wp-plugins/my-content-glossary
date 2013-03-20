@@ -11,7 +11,7 @@ Adds custom glossary features: filters content for links to terms, etc. Companio
  
 == Description ==
 
-This plug-in requires it's parent plug-in, <a href="http://wordpress.org/extend/plugins/my-content-management/">My Content Management</a>, which creates a suite of custom post types, each with an appropriate custom taxonomy and a set of commonly needed custom fields.
+This plug-in requires its parent plug-in, <a href="http://wordpress.org/extend/plugins/my-content-management/">My Content Management</a>, which creates a suite of custom post types, each with an appropriate custom taxonomy and a set of commonly needed custom fields.
 
 The My Content Glossary helper plug-in adds a suite of Glossary-specific tools to your My Content Management plug-in so that you can better manage that area of your custom content. 
 
@@ -44,11 +44,10 @@ Translating my plug-ins is always appreciated. Visit <a href="http://translate.j
 
 == Installation ==
 
-1. Upload the `my-content-management` folder to your `/wp-content/plugins/` directory
+1. Upload the `my-content-glossary` folder to your `/wp-content/plugins/` directory
 2. Activate the plugin using the `Plugins` menu in WordPress
-3. Visit the settings page at Settings > My Content Management to enable your needed content types.
-4. Visit the appropriate custom post types sections to edit and create new content.
-5. Use built-in widgets or shortcodes to display content. (Advanced users can create custom theme templates for displays.)
+
+The plug-in will automatically be active for any Glossary terms you have already created using My Content Management. 
 
 == Frequently Asked Questions ==
 
