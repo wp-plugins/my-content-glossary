@@ -38,6 +38,10 @@ Translating my plug-ins is always appreciated. Visit <a href="http://translate.j
 
 == Changelog ==
 
+= 1.3.4 =
+
+* Bug fix: post used to be an object in filter, is now an array; updated code.
+
 = 1.3.3 =
 
 * Initial release. See the <a href="http://wordpress.org/extend/plugins/my-content-management/changelog/">My Content Management changelog</a> from 1.3.2 and earlier to see previous changes.

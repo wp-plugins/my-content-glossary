@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: My Content Management - Glossary Filter
-Version: 1.3.3
+Version: 1.3.4
 Plugin URI: http://www.joedolson.com/articles/my-content-management/
 Description: Adds custom glossary features: filters content for links to terms, etc. Companion plug-in to My Content Management.
 Author: Joseph C. Dolson
@@ -84,9 +84,8 @@ add_action( 'publish_mcm_glossary', 'mcm_set_glossary', 20 );
 
 function mcm_filter_glossary_list( $return, $post, $last_term, $elem, $type, $first, $last_post, $custom ) {
 	if ( $type != 'mcm_glossary' && $type != 'glossary' ) return $return;
-	$this_letter = ( isset( $post->ID ) ? strtolower( substr( get_the_title( $post->ID ), 0, 1 ) ) : false );
+	$this_letter = ( isset( $post['id'] ) ? strtolower( substr( get_the_title( $post['id'] ), 0, 1 ) ) : false );
 	$last_letter = strtolower( substr( $last_term, 0, 1 ) );
-	
 	$backtotop = (!$first)?"<a href='#alpha' class='return'>".__('Back to Top','my-content-management')."</a>":'';
 	if ( $this_letter != $last_letter ) {
 		$return .= "</$elem>$backtotop<h2 id='glossary$this_letter'>$this_letter</h2><$elem>";
