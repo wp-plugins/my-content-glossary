@@ -2,8 +2,8 @@
 Contributors: joedolson
 Donate link: http://www.joedolson.com/donate.php
 Tags: glossary, custom post types, post types, content management
-Requires at least: 3.2.1
-Tested up to: 3.5.1
+Requires at least: 3.4.2
+Tested up to: 3.9
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -37,6 +37,14 @@ Visit the [My Content Management translations site](http://translate.joedolson.c
 Translating my plug-ins is always appreciated. Visit <a href="http://translate.joedolson.com">my translations site</a> to start getting your language into shape!
 
 == Changelog ==
+
+= 1.3.5 =
+
+* Bug fix: PHP Notice if no terms defined
+* Bug fix: in_array in strict mode to prevent 0 from being identified as having terms.
+* Added class 'mcm-glossary' to inserted definition links
+* Shortcode attribute: [alphabet inactive='false'] to remove letters with no related terms.
+* Updated copyright, requires and tested to values
 
 = 1.3.4 =
 

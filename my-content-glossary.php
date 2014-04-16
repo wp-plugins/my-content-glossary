@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: My Content Management - Glossary Filter
-Version: 1.3.4
+Version: 1.3.5
 Plugin URI: http://www.joedolson.com/articles/my-content-management/
 Description: Adds custom glossary features: filters content for links to terms, etc. Companion plug-in to My Content Management.
 Author: Joseph C. Dolson
 Author URI: http://www.joedolson.com
 */
-/*  Copyright 2011-2012  Joe Dolson (email : joe@joedolson.com)
+/*  Copyright 2011-2014  Joe Dolson (email : joe@joedolson.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,58 +30,61 @@ if ( !is_plugin_active('my-content-management/my-content-management.php') ) {
 	add_action('admin_notices', create_function( '', "echo \"<div class='error'><p>My Content Management must be activated to use MCM Glossary Filter. <a href='$activate'>Visit your plugins page to activate</a>.</p></div>\";" ) );
 }
 
-function mcm_glossary_alphabet($atts) {
-	extract(shortcode_atts(array(
+add_shortcode( 'alphabet','mcm_glossary_alphabet' );
+/*
+*	Produces alphabetical representations of terms in glossary.
+*/
+function mcm_glossary_alphabet( $atts ) {
+	extract( shortcode_atts( array(
 		'numbers' => 'true',
+		'inactive' => 'true'
 		), $atts));
-		
+	$live = array(); 
 	$return = '';
 	$nums = range('0','9');
 	$letters = range('a','z');
 	if ($numbers != 'false') {
 		$letters = array_merge($nums, $letters);
 	}
-	
 	$words = get_option( 'mcm_glossary' );
 	if ( !is_array( $words ) ) {
 		$words = mcm_set_glossary();
 	}
-
 	foreach ( $words as $key=>$value ) {
 		$this_letter = strtolower( substr( $key, 0, 1 ) );
 		$live[]=$this_letter;
 	}
 	foreach ( $letters as $letter ) {
-		if ( in_array( $letter, $live ) ) {
+		if ( in_array( $letter, $live, true ) ) {
 			$return .= "<li><a href='#glossary$letter'>$letter</a></li>";
 		} else {
-			$return .= "<li class='inactive'>$letter</li>";
+			$return .= ( $inactive != 'false' ) ? "<li class='inactive'>$letter</li>" : '';
 		}
 	}
 	return "<ul class='glossary-alphabet' id='alpha'>".$return."</ul>";
 }
-add_shortcode('alphabet','mcm_glossary_alphabet');
 
+add_action( 'publish_mcm_glossary', 'mcm_set_glossary', 20 );
 function mcm_set_glossary() {
-		$args = array(
-			'numberposts' => -1,
-			'post_type' => 'mcm_glossary',
-			'orderby' => 'title',
-			'order'=>'asc'
-		);
-		$words = get_posts( $args );
-		foreach ($words as $word ) {
-			$term = $word->post_title;
-			$link = get_permalink( $word->ID );
-			$array[$term] = $link;
-		}
-		update_option( 'mcm_glossary',	$array );
-		wp_reset_query();
-		return $array;
+	$array = array();
+	$args = array(
+		'numberposts' => -1,
+		'post_type' => 'mcm_glossary',
+		'orderby' => 'title',
+		'order'=>'asc'
+	);
+	$words = get_posts( $args );
+	foreach ($words as $word ) {
+		$term = $word->post_title;
+		$link = get_permalink( $word->ID );
+		$array[$term] = $link;
+	}
+	update_option( 'mcm_glossary',	$array );
+	wp_reset_query();
+	return $array;
 }
 
-add_action( 'publish_mcm_glossary', 'mcm_set_glossary', 20 );		
-
+add_filter( 'mcm_filter_posts','mcm_filter_glossary_list', 10, 8 );
 function mcm_filter_glossary_list( $return, $post, $last_term, $elem, $type, $first, $last_post, $custom ) {
 	if ( $type != 'mcm_glossary' && $type != 'glossary' ) return $return;
 	$this_letter = ( isset( $post['id'] ) ? strtolower( substr( get_the_title( $post['id'] ), 0, 1 ) ) : false );
@@ -93,13 +96,17 @@ function mcm_filter_glossary_list( $return, $post, $last_term, $elem, $type, $fi
 	return $return;
 }
 
-add_filter( 'mcm_filter_posts','mcm_filter_glossary_list', 10, 8 );
-
+add_filter( 'the_content', 'mcm_glossary_filter', 10 );
+add_filter( 'comment_text', 'mcm_glossary_filter', 10 );
+/*
+* Filter content to identify terms from glossary and link to definitions.
+* Replaces first two occurrences only.
+*/
 function mcm_glossary_filter($content) {
 	$post_types = get_post_types();
-        global $post;
-		$id = $post->ID;
-		$ng = get_post_custom_values( '_nogloss',$id );	// Set a custom field called '_nogloss' to 'no' on any post to deactivate glossary filtering.
+	global $post;
+	$id = $post->ID;
+	$ng = get_post_custom_values( '_nogloss', $id );	// Set a custom field called '_nogloss' to 'no' on any post to deactivate glossary filtering.
 	if ( in_array( 'mcm_glossary',$post_types ) ) {
 		$words = get_option( 'mcm_glossary' );
 		if ( !is_array( $words ) ) {
@@ -107,7 +114,7 @@ function mcm_glossary_filter($content) {
 		}
 		if ( !is_singular( 'mcm_glossary' ) && $ng[0] != 'No' ) {
 			$content = " $content ";
-			if ( is_array($words) ) {
+			if ( is_array( $words ) ) {
 				foreach( $words as $key=>$value ) {
 					$term = $key;
 					$link = $value;
@@ -122,14 +129,11 @@ function mcm_glossary_filter($content) {
 	return $content;
 }
 
-add_filter('the_content', 'mcm_glossary_filter', 10);
-add_filter('comment_text', 'mcm_glossary_filter', 10);
 add_shortcode('term','mcm_glossary_link');
-
 function mcm_glossary_link($atts) {
 	extract(shortcode_atts(array(
 				'id' => '',
 				'term' => ''
 			), $atts));
-	return "<a href='".get_permalink( $id )."'>$term</a>";
+	return "<a href='".get_permalink( $id )."' class='mcm-glossary'>$term</a>";
 }
