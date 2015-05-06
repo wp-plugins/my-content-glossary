@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: My Content Management - Glossary Filter
-Version: 1.3.5
+Version: 1.3.6
 Plugin URI: http://www.joedolson.com/articles/my-content-management/
 Description: Adds custom glossary features: filters content for links to terms, etc. Companion plug-in to My Content Management.
 Author: Joseph C. Dolson
 Author URI: http://www.joedolson.com
 */
-/*  Copyright 2011-2014  Joe Dolson (email : joe@joedolson.com)
+/*  Copyright 2011-2015  Joe Dolson (email : joe@joedolson.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,9 +43,12 @@ function mcm_glossary_alphabet( $atts ) {
 	$return = '';
 	$nums = range('0','9');
 	$letters = range('a','z');
-	if ($numbers != 'false') {
+	if ( $numbers != 'false' ) {
 		$letters = array_merge($nums, $letters);
 	}
+	// Use mcm_glossary_alphabet to provide a custom set of letters (e.g., other alphabets)
+	$letters = apply_filters( 'mcm_glossary_alphabet', $letters, $atts );
+
 	$words = get_option( 'mcm_glossary' );
 	if ( !is_array( $words ) ) {
 		$words = mcm_set_glossary();
@@ -98,6 +101,7 @@ function mcm_filter_glossary_list( $return, $post, $last_term, $elem, $type, $fi
 
 add_filter( 'the_content', 'mcm_glossary_filter', 10 );
 add_filter( 'comment_text', 'mcm_glossary_filter', 10 );
+
 /*
 * Filter content to identify terms from glossary and link to definitions.
 * Replaces first two occurrences only.
@@ -106,13 +110,13 @@ function mcm_glossary_filter($content) {
 	$post_types = get_post_types();
 	global $post;
 	$id = $post->ID;
-	$ng = get_post_custom_values( '_nogloss', $id );	// Set a custom field called '_nogloss' to 'no' on any post to deactivate glossary filtering.
+	$ng = strtolower( get_post_custom_values( '_nogloss', $id ) );	// Set a custom field called '_nogloss' to 'no' on any post to deactivate glossary filtering.
 	if ( in_array( 'mcm_glossary',$post_types ) ) {
 		$words = get_option( 'mcm_glossary' );
 		if ( !is_array( $words ) ) {
 			$words = mcm_set_glossary();
 		}
-		if ( !is_singular( 'mcm_glossary' ) && $ng[0] != 'No' ) {
+		if ( !is_singular( 'mcm_glossary' ) && ( isset( $ng[0] ) && $ng[0] != 'no' ) ) {
 			$content = " $content ";
 			if ( is_array( $words ) ) {
 				foreach( $words as $key=>$value ) {

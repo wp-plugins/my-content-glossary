@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate.php
 Tags: glossary, custom post types, post types, content management
 Requires at least: 3.4.2
-Tested up to: 3.9
+Tested up to: 4.1
 License: GPLv2 or later
 Stable tag: trunk
 
@@ -11,32 +11,30 @@ Adds custom glossary features: filters content for links to terms, etc. Companio
  
 == Description ==
 
-This plug-in requires its parent plug-in, <a href="http://wordpress.org/extend/plugins/my-content-management/">My Content Management</a>, which creates a suite of custom post types, each with an appropriate custom taxonomy and a set of commonly needed custom fields.
+My Content: Glossary equires its parent plug-in, <a href="http://wordpress.org/extend/plugins/my-content-management/">My Content Management</a>, which creates a suite of custom post types, each with an appropriate custom taxonomy and a set of commonly needed custom fields.
 
-The My Content Glossary helper plug-in adds a suite of Glossary-specific tools to your My Content Management plug-in so that you can better manage that area of your custom content. 
+The My Content Glossary helper plug-in adds Glossary-specific tools to your My Content Management plug-in so that you can better manage that area of your custom content. 
 
-Shortcodes:
+= Shortcodes: =
 
-[alphabet numbers='true']
+`[alphabet numbers='true']`: displays list of linked first characters represented in your Glossary. (Roman alphabet only, including numbers 0-9 by default.)
 
-displays list of linked first characters represented in your Glossary. (Roman alphabet only, including numbers 0-9 by default.)
+`[term id='' term='']`: displays value of term attribute linked to glossary term with ID attribute.
 
-[term id='' term='']
+`[my_content type='glossary' display='full' taxonomy='mcm_category_glossary' order='menu_order']`: display the list of glossary terms with headings for each represented alphabet character.
 
-displays value of term attribute linked to glossary term with ID attribute.
+= Automatic Features =
 
-*Adds links throughout content for each term in your glossary.
-*Adds character headings to each section of your glossary list.
-
-
-Available languages (in order of completeness):
-Irish, Spanish
-
-Visit the [My Content Management translations site](http://translate.joedolson.com/projects/my-content-management/) to check how complete a translation is.
-
-Translating my plug-ins is always appreciated. Visit <a href="http://translate.joedolson.com">my translations site</a> to start getting your language into shape!
+* Adds links throughout content (the first two occurrences on a page) for each term in your glossary.
+* Adds character headings to each section of your glossary list.
 
 == Changelog ==
+
+= 1.3.6 =
+
+* New filter: 'mcm_glossary_alphabet': pass in a custom alphabet array.
+* Make nogloss meta value non-case-sensitive
+* Updated readme.txt to include some useful information previously missing.
 
 = 1.3.5 =
 
