@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate.php
 Tags: glossary, custom post types, post types, content management
 Requires at least: 3.4.2
-Tested up to: 4.1
+Tested up to: 4.2
 License: GPLv2 or later
 Stable tag: trunk
 
